@@ -1,3 +1,6 @@
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -19,9 +22,9 @@ public class Main {
         String URL = "https://search.jd.com/Search?keyword=" + input_product + "&wq=" + input_product + "&page=1&s=1&click=1";
 
         ChromeOptions options = new ChromeOptions();
-        options.setBinary("C:/Program Files/Google/Chrome/Application/chrome.exe");
+        options.setBinary("C:/Users/2_Ritual/AppData/Local/Google/Chrome/Application/chrome.exe");
         options.addArguments("--headless","--disable-gpu");
-        System.setProperty("webdriver.chrome.driver", "L:/BS/chromedriver-win64/chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "E:/BS/chromedriver-win64/chromedriver.exe");
         WebDriver driver = new ChromeDriver(options);
 
         driver.get(URL);
@@ -33,29 +36,42 @@ public class Main {
 //        System.out.println(doc);
 
         Elements productElements = doc.select(".gl-item");
-
-        // 创建一个列表保存 Product 对象
         List<Product> productList = new ArrayList<>();
 
-        // 遍历每个商品项，提取信息并创建 Product 对象
         for (Element productElement : productElements) {
-            // 提取商品名称、原价、现价、图片链接和SKU ID
             String name = productElement.select(".p-name a em").text();
-            String dataBuried = productElement.attr("data-buried");
-            String decodedDataBuried = Entities.unescape(dataBuried);
-            System.out.println(decodedDataBuried);
-            String originalPrice = productElement.attr("").split("\"ori_price\":\"")[1].split("\"")[0];
-            String currentPrice = productElement.attr("data-buried").split("\"price\":\"")[1].split("\"")[0];
-            String imageUrl = productElement.select(".p-img img").attr("src");
-            String skuId = productElement.attr("data-sku");
+            Elements element = productElement.select("div[data-buried]");
 
-            Product product = new Product(name, originalPrice, currentPrice, imageUrl, skuId);
-            productList.add(product);
+            String dataBuried = element.attr("data-buried");
+            String formattedData = dataBuried;
+//            System.out.println("提取的内容：\n" + formattedData);
+
+            try {
+                JsonElement jsonElement = JsonParser.parseString(formattedData);
+                JsonObject jsonObject = jsonElement.getAsJsonObject();
+
+                float price = Float.parseFloat(jsonObject.get("price").getAsString());
+                float oriPrice = Float.parseFloat(jsonObject.get("ori_price").getAsString());
+                String skuId = jsonObject.get("skuid").getAsString();
+
+                String mtestActString = jsonObject.get("mtest_act").getAsString();
+                String[] mtestAct = mtestActString.split(",");
+
+                System.out.println("price: " + price);
+                System.out.println("ori_price: " + oriPrice);
+                System.out.println("skuid: " + skuId);
+                System.out.print("mtest_act: ");
+                for (String act : mtestAct) {
+                    System.out.print(act + " ");
+                }
+                System.out.print("\n");
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
 
-
-
+        System.out.println("CATCH OVER");
     }
 }
-
-// https://search.jd.com/Search?keyword=%E6%89%8B%E6%9C%BA&enc=utf-8&wq=%E6%89%8B%E6%9C%BA&pvid=cab3453f2b9d428386be3dd6dd623fc8

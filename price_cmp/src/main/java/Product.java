@@ -1,12 +1,12 @@
 public class Product {
     private String name;
-    private String originalPrice;
-    private String currentPrice;
+    private float originalPrice;
+    private float currentPrice;
     private String imageUrl;
     private String skuId;
+    private String[] mtest_act = new String[25];
 
-    // Constructor
-    public Product(String name, String originalPrice, String currentPrice, String imageUrl, String skuId) {
+    public Product(String name, float originalPrice, float currentPrice, String imageUrl, String skuId) {
         this.name = name;
         this.originalPrice = originalPrice;
         this.currentPrice = currentPrice;
@@ -14,7 +14,6 @@ public class Product {
         this.skuId = skuId;
     }
 
-    // Getters and Setters
     public String getName() {
         return name;
     }
@@ -23,19 +22,19 @@ public class Product {
         this.name = name;
     }
 
-    public String getOriginalPrice() {
+    public float getOriginalPrice() {
         return originalPrice;
     }
 
-    public void setOriginalPrice(String originalPrice) {
+    public void setOriginalPrice(float originalPrice) {
         this.originalPrice = originalPrice;
     }
 
-    public String getCurrentPrice() {
+    public float getCurrentPrice() {
         return currentPrice;
     }
 
-    public void setCurrentPrice(String currentPrice) {
+    public void setCurrentPrice(float currentPrice) {
         this.currentPrice = currentPrice;
     }
 
