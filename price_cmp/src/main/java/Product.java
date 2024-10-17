@@ -1,61 +1,35 @@
 public class Product {
-    private String name;
-    private String originalPrice;
-    private String currentPrice;
-    private String imageUrl;
-    private String skuId;
+    private final String name;
+    private final float originalPrice;
+    private final float currentPrice;
+    private final String imageUrl;
+    private final String skuId;
+    private final String[] mtest_act;
 
-    // Constructor
-    public Product(String name, String originalPrice, String currentPrice, String imageUrl, String skuId) {
+    public Product(String name, float originalPrice, float currentPrice, String imageUrl, String skuId, String[] mtestAct) {
         this.name = name;
         this.originalPrice = originalPrice;
         this.currentPrice = currentPrice;
         this.imageUrl = imageUrl;
         this.skuId = skuId;
+        this.mtest_act = mtestAct;
     }
 
-    // Getters and Setters
     public String getName() {
         return name;
     }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getOriginalPrice() {
+    public float getOriginalPrice() {
         return originalPrice;
     }
-
-    public void setOriginalPrice(String originalPrice) {
-        this.originalPrice = originalPrice;
-    }
-
-    public String getCurrentPrice() {
+    public float getCurrentPrice() {
         return currentPrice;
     }
-
-    public void setCurrentPrice(String currentPrice) {
-        this.currentPrice = currentPrice;
-    }
-
     public String getImageUrl() {
         return imageUrl;
     }
+    public String[] getMtestAct() { return this.mtest_act; }
+    public String getSkuId() { return skuId; }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
-    public String getSkuId() {
-        return skuId;
-    }
-
-    public void setSkuId(String skuId) {
-        this.skuId = skuId;
-    }
-
-    // Method to display product information
     public void displayProductInfo() {
         System.out.println("商品名称: " + name);
         System.out.println("原价: " + originalPrice);
