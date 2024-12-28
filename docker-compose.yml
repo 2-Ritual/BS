@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: price_cmp
+    ports:
+      - "3306:3306"
+    networks:
+      - app-network
+
+  web:
+    build: .
+    environment:
+      MYSQL_HOST: db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: 1234
+      MYSQL_DATABASE: price_cmp
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    networks:
+      - app-network
+    command: bash -c "chmod +x /wait-for-it.sh && /wait-for-it.sh db:3306 -- python manage.py makemigrations && python manage.py migrate && python load.py && python manage.py runserver 0.0.0.0:8000"
+
+  frontend:
+    build:
+      context: ./price_cmp/frontend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - web
+    networks:
+      - app-network
+    command: bash -c "chmod +x /wait-for-it.sh && /wait-for-it.sh web:8000 -- npm run serve"
+
+networks:
+  app-network:
+    driver: bridge
